@@ -1,0 +1,1 @@
+{"version":3,"file":"endpoints.mjs","names":[],"sources":["../../src/provider/endpoints.ts"],"sourcesContent":["export enum VMEndpoint {\n  RENDER = \"qrender\",\n  FUNCTION_SIGNATURES = \"qfuncs\",\n  EVALUATE = \"qeval\",\n  FILE_CONTENT = \"qfile\",\n}\n"],"mappings":";AAAA,IAAY,aAAL,yBAAA,YAAA;AACL,YAAA,YAAA;AACA,YAAA,yBAAA;AACA,YAAA,cAAA;AACA,YAAA,kBAAA;;KACD"}

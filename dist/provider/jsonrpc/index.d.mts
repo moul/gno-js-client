@@ -1,0 +1,1 @@
+import { GnoJSONRPCProvider } from "./jsonrpc.mjs";

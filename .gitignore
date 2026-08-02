@@ -3,7 +3,9 @@ node_modules
 
 # Build files
 bin
-dist
+# dist is COMMITTED on the gnomputer branch (see README) so the package can
+# be installed from git without running a build.
+!dist
 # Dev environment metadata
 .idea
 .DS_Store

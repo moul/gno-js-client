@@ -52,7 +52,7 @@
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
-    "prepare": "pnpm build",
+    "prepare": "node -e \"process.stdout.write('gnomputer fork: dist is committed, skipping build\\\\n')\"",
     "prepublishOnly": "pnpm lint"
   },
   "dependencies": {

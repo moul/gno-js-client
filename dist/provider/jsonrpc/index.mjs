@@ -1,0 +1,2 @@
+import "./jsonrpc.mjs";
+export {};

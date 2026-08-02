@@ -1,0 +1,73 @@
+//#region src/provider/utility/provider.utility.ts
+const encoder = new TextEncoder();
+/**
+* Encodes VM query parameters into a Uint8Array suitable for abciQuery data.
+* Joins params with the given separator and encodes to UTF-8 bytes.
+* @param {string[]} params the params for the ABCI call
+* @param {string} separator the separator for ABCI call parameters (default: "")
+*/
+const encodeVMQueryData = (params, separator = "") => {
+	return encoder.encode(params.join(separator));
+};
+const extractStringFromResponse = (abciData) => {
+	if (!abciData) throw new Error("ABCI response is not initialized");
+	return Buffer.from(abciData, "base64").toString();
+};
+/**
+* Decodes an ABCI payload that is allowed to be empty.
+*
+* A query can legitimately succeed and produce nothing — a `Render` that
+* returns an empty string, for instance. The response adapter collapses an
+* empty payload to `null`, so text results have to read a missing payload as
+* empty; whether the query actually failed has already been settled by
+* `assertNoABCIError`.
+* @param {string | null} abciData the base64 `ResponseBase.Data`
+*/
+const extractOptionalStringFromResponse = (abciData) => {
+	return abciData ? Buffer.from(abciData, "base64").toString() : "";
+};
+const toRecord = (value) => {
+	return value && typeof value === "object" ? value : {};
+};
+const toNumberOrUndefined = (value) => {
+	if (value === void 0 || value === null || value === "") return;
+	return Number(value);
+};
+const toStringOrUndefined = (value) => {
+	if (value === void 0 || value === null) return;
+	return String(value);
+};
+const toStringArrayOrUndefined = (value) => {
+	if (!Array.isArray(value)) return;
+	return value.map(String);
+};
+const normalizeSessionAccount = (raw) => {
+	const obj = toRecord(raw);
+	const baseSession = toRecord(obj.BaseSessionAccount ?? obj.base_session_account ?? obj);
+	const baseAccount = toRecord(baseSession.BaseAccount ?? baseSession.base_account ?? baseSession);
+	const allowPaths = toStringArrayOrUndefined(obj.allow_paths) ?? toStringArrayOrUndefined(baseSession.allow_paths) ?? toStringArrayOrUndefined(baseAccount.allow_paths);
+	return {
+		address: String(baseAccount.address ?? ""),
+		public_key: baseAccount.public_key ?? baseAccount.pub_key,
+		account_number: toStringOrUndefined(baseAccount.account_number),
+		sequence: toStringOrUndefined(baseAccount.sequence),
+		master_address: String(baseSession.master_address ?? ""),
+		expires_at: toNumberOrUndefined(baseSession.expires_at),
+		spend_limit: toStringOrUndefined(baseSession.spend_limit),
+		spend_period: toNumberOrUndefined(baseSession.spend_period),
+		spend_used: toStringOrUndefined(baseSession.spend_used),
+		spend_reset: toNumberOrUndefined(baseSession.spend_reset),
+		allow_paths: allowPaths
+	};
+};
+//#endregion
+exports.encodeVMQueryData = encodeVMQueryData;
+exports.extractOptionalStringFromResponse = extractOptionalStringFromResponse;
+exports.extractStringFromResponse = extractStringFromResponse;
+exports.normalizeSessionAccount = normalizeSessionAccount;
+exports.toNumberOrUndefined = toNumberOrUndefined;
+exports.toRecord = toRecord;
+exports.toStringArrayOrUndefined = toStringArrayOrUndefined;
+exports.toStringOrUndefined = toStringOrUndefined;
+
+//# sourceMappingURL=provider.utility.cjs.map
